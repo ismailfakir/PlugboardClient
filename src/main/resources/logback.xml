@@ -1,0 +1,16 @@
+<configuration>
+    <!-- definition of appender STDOUT -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%green([%date]) %highlight([%level]) %yellow([%logger{10}::%M %L]) %cyan(%msg%n)</pattern>
+            <!--<pattern>%green([%date]) %highlight([%level]) %yellow([%file %highlight([%M]) :%line])   %cyan(%msg%n)</pattern>-->
+        </encoder>
+    </appender>
+
+    <logger name="net.cloudcentrik.woocommerceclient" level="DEBUG" />
+
+    <root level="INFO">
+        <!-- appender referenced after it is defined -->
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
