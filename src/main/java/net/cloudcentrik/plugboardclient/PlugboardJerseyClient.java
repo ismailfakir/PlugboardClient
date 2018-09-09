@@ -1,6 +1,6 @@
 package net.cloudcentrik.plugboardclient;
 
-import com.google.gson.*;
+import com.eclipsesource.json.*;
 import javafx.util.Pair;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 
 import static net.cloudcentrik.plugboardclient.util.Param.param;
 
-public class PlugboardClient {
+public class PlugboardJerseyClient {
     private static Invocation.Builder getClient(String path, Pair<String,String> ...queryParams){
         HttpAuthenticationFeature authenticationFeature = HttpAuthenticationFeature.basic(
                 ClientCredientils.PLUGBOARD_USER_NAME, ClientCredientils.PLUGBOARD_USER_PASSWORD);
@@ -36,13 +36,13 @@ public class PlugboardClient {
         return invocationBuilder;
     }
 
-    private static JsonElement parsePlugboardResponse(Response response){
-        JsonElement jsonElement=null;
+    private static JsonValue parsePlugboardResponse(Response response){
+        JsonValue jsonElement=null;
 
         if(response.getStatus()==200||response.getStatus()==201){
-            jsonElement = new JsonParser().parse(response.readEntity(String.class));
+            jsonElement = Json.parse(response.readEntity(String.class));
         }else if(response.getStatus()==400){
-            jsonElement = new JsonParser().parse(response.readEntity(String.class));
+            jsonElement = Json.parse(response.readEntity(String.class));
         }
 
         return jsonElement;
@@ -55,7 +55,7 @@ public class PlugboardClient {
         Invocation.Builder client=getClient(path,queryParam);
         Response response=client.get();
 
-        return parsePlugboardResponse(response).getAsJsonObject();
+        return parsePlugboardResponse(response).asObject();
     }
 
     public static JsonArray getPlugboardJsonArray(String path, Pair<String,String> ...queryParam){
@@ -64,7 +64,7 @@ public class PlugboardClient {
         Invocation.Builder client=getClient(path,queryParam);
         Response response=client.get();
 
-        return parsePlugboardResponse(response).getAsJsonArray();
+        return parsePlugboardResponse(response).asArray();
     }
 
     public static JsonObject postPlugboardJsonObject(String path,JsonObject jsonObject,Pair<String,String> ...queryParams){
@@ -72,7 +72,7 @@ public class PlugboardClient {
         Invocation.Builder client=getClient(path,queryParams);
         Response response=client.post(Entity.entity(jsonObject.toString(),MediaType.APPLICATION_JSON));
 
-        return parsePlugboardResponse(response).getAsJsonObject();
+        return parsePlugboardResponse(response).asObject();
     }
 
     public static JsonObject putPlugboardJsonObject(String path,JsonObject jsonObject,Pair<String,String> ...queryParams){
@@ -80,7 +80,7 @@ public class PlugboardClient {
         Invocation.Builder client=getClient(path,queryParams);
         Response response=client.put(Entity.entity(jsonObject.toString(),MediaType.APPLICATION_JSON));
 
-        return parsePlugboardResponse(response).getAsJsonObject();
+        return parsePlugboardResponse(response).asObject();
     }
 
 
@@ -116,6 +116,12 @@ public class PlugboardClient {
     public static JsonObject addPlugboardProduct(JsonObject jsonObject){
 
         return postPlugboardJsonObject("product",jsonObject,param("updateOnRemoteId",Boolean.TRUE));
+    }
+
+    //list order
+    public static JsonArray listProduct(String modifiedAtOrAfter){
+
+        return getPlugboardJsonArray("product",param("modifiedAtOrAfter",modifiedAtOrAfter));
     }
 
 

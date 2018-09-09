@@ -1,43 +1,79 @@
 package net.cloudcentrik.plugboardclient;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.eclipsesource.json.JsonObject;
 import net.cloudcentrik.plugboardclient.model.Product;
-import net.cloudcentrik.plugboardclient.util.JsonUtil;
+import net.cloudcentrik.plugboardclient.restclient.RestClient;
 
-import static net.cloudcentrik.plugboardclient.util.JsonUtil.convertToGson;
+import java.util.HashMap;
+import java.util.Map;
+
+import static net.cloudcentrik.plugboardclient.ClientCredientils.PLUGBOARD_URL;
+import static net.cloudcentrik.plugboardclient.ClientCredientils.PLUGBOARD_USER_NAME;
+import static net.cloudcentrik.plugboardclient.ClientCredientils.PLUGBOARD_USER_PASSWORD;
 
 /**
  * Hello world!
  *
  */
-public class App 
+public class App
 {
-    public static void main( String[] args )
+
+    public static void main( String[] args ) throws Exception
     {
         System.out.println( "connecting to plugboard" );
-
-        /*JsonArray jsonObject=PlugboardClient.getProducts("2010-01-06T15:00:00.05Z");
-        System.out.println(jsonObject.toString());*/
-
-        /*JsonObject jsonObject=PlugboardClient.updatePlugboardOrder(Order.parseUpdateOrder(),"00085e856131395f9a5c4ce5f4c42a11");
-        JsonUtil.prettyPrint(jsonObject);*/
-
-        //JsonObject jsonObject=PlugboardClient.addPlugboardOrder(Order.parseOrder());
 
         //String timestamp = TimeUtil.formatTime("2015-01-02T03:04:05.000Z");
 
         //System.out.println(timestamp);
 
-        //JsonArray jsonObject=PlugboardClient.listPlugboardOrder("2015-01-02T03:04:05.000Z");
+        //JsonArray jsonObject=PlugboardJerseyClient.listPlugboardOrder("2015-01-02T03:04:05.000Z");
         //JsonUtil.prettyPrint(jsonObject);
 
         //String string=JsonUtil.wrapInLang("description","namn","name").toString(WriterConfig.PRETTY_PRINT);
         //System.out.println(Product.parseProduct().toString(WriterConfig.PRETTY_PRINT));
 
-        JsonObject jsonObject=PlugboardClient.addPlugboardProduct(convertToGson(Product.parseProduct()));
+        //JsonObject jsonObject=PlugboardJerseyClient.addPlugboardProduct(convertToGson(Product.parseProduct()));
 
-        JsonUtil.prettyPrint(jsonObject);
+        /*JsonArray jsonObject=PlugboardJerseyClient.listProduct(TimeUtil.formatTime("2017-09-01"));
+
+
+        for(JsonValue object:jsonObject){
+            JsonUtil.prettyPrint(object.asObject().get("remoteId"));
+            JsonUtil.prettyPrint(object.asObject().get("localId"));
+        }*/
+
+        //RestClientTemp.build();
+
+        /*
+        * TODO update product
+         */
+
+        Map<String, String> headers=new HashMap<>();
+        headers.put("X-Tenant",ClientCredientils.PLUGBOARD_X_TENANT);
+        headers.put("X-ConnectionId",ClientCredientils.PLUGBOARD_X_CONNECTION_ID);
+        RestClient restClient=RestClient.getBasicJsonClient(PLUGBOARD_URL,PLUGBOARD_USER_NAME,PLUGBOARD_USER_PASSWORD,headers,true);
+
+        Map<String, String> params=new HashMap<>();
+        params.put("modifiedAtOrAfter","2015-01-02T03:04:05.000Z");
+        //restClient.getRequest("product",params);
+
+        //String localId="000812acedf4c99865ab808106edfef2";
+        JsonObject jsonObject=new JsonObject().add("remoteId","1122334455");
+
+        //restClient.putRequest("product/"+localId,null,jsonObject);
+
+        //restClient.postRequest("product",null,Product.parseProduct());
+
+        //PlugBoardHttpClient.getProductList("2015-01-02T03:04:05.000Z");
+        //PlugBoardHttpClient.createFile("product1001.jpeg","image/jpeg",true);
+
+        String localFileId="000812acedf4c99865ab808106edff8f";
+
+        PlugBoardHttpClient.postFile("/home/ismail/Desktop/minix.jpeg","image/jpeg",localFileId);
+
+
+
 
     }
+
 }

@@ -3,10 +3,9 @@ package net.cloudcentrik.plugboardclient.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class TimeUtil {
-    public final static SimpleDateFormat PLUGBOARD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'h:m:ss.S'Z'");
+    public final static SimpleDateFormat PLUGBOARD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'h:mm:ss.SSS'Z'");
 
     public static String timeNow() {
         return PLUGBOARD_DATE_FORMAT.format(new Date());
